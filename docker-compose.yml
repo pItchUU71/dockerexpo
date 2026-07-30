@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  postgres-casdoor:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: casdoor
+      POSTGRES_USER: casdoor
+      POSTGRES_PASSWORD: casdoor_pass
+    volumes:
+      - pgdata-casdoor:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  casdoor:
+    image: casbin/casdoor:latest
+    restart: always
+    depends_on:
+      - postgres-casdoor
+    environment:
+      driverName: postgres
+      dataSourceName: "user=casdoor password=casdoor_pass host=postgres-casdoor port=5432 dbname=casdoor sslmode=disable"
+      runmode: dev
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata-casdoor:

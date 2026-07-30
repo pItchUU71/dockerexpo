@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: casdoor
+    env: docker
+    dockerImagePath: casbin/casdoor:latest
+    plan: free
+    region: frankfurt
+    envVars:
+      - key: driverName
+        value: postgres
+      - key: dataSourceName
+        fromDatabase:
+          name: casdoor-db
+          property: connectionString
+      - key: runmode
+        value: prod
+
+databases:
+  - name: casdoor-db
+    plan: free
+    region: frankfurt
